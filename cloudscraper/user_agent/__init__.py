@@ -45,9 +45,6 @@ class User_Agent():
         self.browser = kwargs.pop('browser', None)
 
         if isinstance(self.browser, dict):
-            self.desktop = self.browser.get('desktop', True)
-            self.mobile = self.browser.get('mobile', True)
-            self.browser = self.browser.get('browser', None)
             self.user_agent = self.browser.get('user_agent', None)
             if self.user_agent:
                 if 'Mobile' in self.user_agent or 'Tablet' in self.user_agent:
@@ -57,6 +54,10 @@ class User_Agent():
                     self.desktop = True
                     self.mobile = False
                 self.browser = 'firefox' if 'Firefox' in self.user_agent else 'chrome'
+            else:
+                self.desktop = self.browser.get('desktop', True)
+                self.mobile = self.browser.get('mobile', True)
+                self.browser = self.browser.get('browser', None)
         else:
             self.desktop = kwargs.pop('desktop', True)
             self.mobile = kwargs.pop('mobile', True)
