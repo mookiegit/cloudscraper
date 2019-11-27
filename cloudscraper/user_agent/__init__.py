@@ -48,6 +48,15 @@ class User_Agent():
             self.desktop = self.browser.get('desktop', True)
             self.mobile = self.browser.get('mobile', True)
             self.browser = self.browser.get('browser', None)
+            self.user_agent = self.browser.get('user_agent', None)
+            if self.user_agent:
+                if 'Mobile' in self.user_agent or 'Tablet' in self.user_agent:
+                    self.desktop = False
+                    self.mobile = True
+                else:
+                    self.desktop = True
+                    self.mobile = False
+                self.browser = 'firefox' if 'Firefox' in self.user_agent else 'chrome'
         else:
             self.desktop = kwargs.pop('desktop', True)
             self.mobile = kwargs.pop('mobile', True)
@@ -77,6 +86,8 @@ class User_Agent():
         self.loadHeaders(user_agents, user_agent_version)
 
         self.headers['User-Agent'] = random.SystemRandom().choice(filteredAgents[user_agent_version])
+        if self.user_agent:
+            self.headers['User-Agent'] = self.user_agent
 
         if not kwargs.get('allow_brotli', False):
             if 'br' in self.headers['Accept-Encoding']:
